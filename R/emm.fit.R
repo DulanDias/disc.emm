@@ -11,6 +11,8 @@
 
 emm.fit <- function(x, k = 10, n_init = 10, n_iter = 1000, seed = 1) {
 
+  set.seed(seed)
+
   # package names
   packages <- c("matrixStats", "ggplot2", "gridExtra", "dplyr")
 
@@ -74,10 +76,10 @@ emm.fit <- function(x, k = 10, n_init = 10, n_iter = 1000, seed = 1) {
     }
   }
 
-
   ## evaluation metrics
 
-  ##TODO
+  aic <- _aic(marginal_log_likelihood, k)
+  bic <- _bic(marginal_log_likelihood, k, n)
 
-  return(list(pi = pi, mu = mu))
+  return(list(pi = pi, mu = mu, aic = aic, bic = bic))
 }
