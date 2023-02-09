@@ -1,0 +1,10 @@
+Package: disc-moed
+Type: Package
+Title: Discretization of a Continuous Numerical Attribute by Fitting a Mixture of Exponential Distributions
+Version: 2.0.0
+Author: Dulan S. Dias
+Maintainer: Dulan S. Dias <ddias01@qub.ac.uk>
+Description: Maximum likelihood estimation for selection of exponential mixture model (i.e., mixture of exponential distributions) fitted using the Expectation-Maximization Method
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
