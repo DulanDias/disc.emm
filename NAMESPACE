@@ -1,0 +1,3 @@
+## This file is used to control the exported and imported functions in the package.
+
+exportPattern("^[[:alpha:]]+")
