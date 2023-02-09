@@ -1,0 +1,52 @@
+---
+title: "Tests"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+## Loading Packages
+
+```{r setup, include=FALSE}
+library("devtools")
+library(roxygen2)
+```
+
+## Build
+
+```{r}
+build()
+```
+
+## Generate Documentation
+
+Set Working Directory
+```{r message=FALSE, warning=FALSE}
+#setwd("C:/Users/40280170/OneDrive - Queen's University Belfast/Documents/R/disc-moed/disc-moed")
+#load_all(".");
+```
+
+```{r}
+document()
+```
+
+## Install Package
+
+```{r message=FALSE, warning=TRUE, include=FALSE}
+install("disc.emm")
+```
+
+## Install via GitHub
+```{r}
+library(devtools) # Make sure that the devtools library is loaded
+install_github("DulanDias/disc.emm")
+```
+
+## Testing the Package
+
+```{r}
+
+```
+
+
+
+

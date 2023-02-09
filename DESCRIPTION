@@ -1,4 +1,4 @@
-Package: disc-moed
+Package: disc.emm
 Type: Package
 Title: Discretization of a Continuous Numerical Attribute by Fitting a Mixture of Exponential Distributions
 Version: 2.0.0
