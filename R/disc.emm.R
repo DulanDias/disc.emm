@@ -1,4 +1,4 @@
-discretizeEmm <- function(x, emm) {
+disc.emm <- function(x, emm) {
 
   intersections <- _find_intersections(pu = emm$pu, mu = emm$mu)
 
