@@ -1,4 +1,4 @@
-_run_em <- function(x, k, mu0 = NULL, n_iter = 1000){
+run_em <- function(x, k, mu0 = NULL, n_iter = 1000){
   if(is.null(mu0)){
     mu0 <- 10^seq(log10(min(x)), log10(max(x)), length.out = k)
   }
@@ -23,7 +23,7 @@ _run_em <- function(x, k, mu0 = NULL, n_iter = 1000){
   log_gamma <- log_pi - log_mu - x / exp(log_mu)
   z <- which.max(log_gamma, arr.ind = T)
 
-  marginal_log_likelihood <- _marginal_log_likelihood(x, exp(log_pi), exp(log_mu))
+  marginal_log_likelihood <- marginal_log_likelihood(x, exp(log_pi), exp(log_mu))
 
   return(list(z = z, marginal_log_likelihood = marginal_log_likelihood))
 }

@@ -1,10 +1,10 @@
 disc.emm <- function(x, emm) {
 
-  intersections <- _find_intersections(pu = emm$pu, mu = emm$mu)
+  intersections <- find_intersections(pu = emm$pu, mu = emm$mu)
 
-  cuts <- _cut(x, intersections)
+  cuts <- cut(x, intersections)
 
-  mi <- _mutual_information(x, cuts)
+  mi <- mutual_information(x, cuts)
 
   return(list(cuts = cuts, mi = mi))
 }

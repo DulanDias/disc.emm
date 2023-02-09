@@ -1,4 +1,4 @@
-_mutual_information <- function(continuous_var, binned_var) {
+mutual_information <- function(continuous_var, binned_var) {
   # Calculate the joint probability distribution
   joint_prob <- prop.table(table(binned_var, continuous_var), 2)
 
