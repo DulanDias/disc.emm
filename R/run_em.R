@@ -15,9 +15,9 @@ run_em <- function(x, k, mu0 = NULL, n_iter = 1000) {
     log_gamma_temp <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
     log_gamma_temp <- log_gamma_temp - matrix(rowSums(exp(log_gamma_temp)), nrow = length(rowSums(exp(log_gamma_temp))), ncol = ncol(log_gamma_temp))
 
-    # Check if log_gamma contains -Inf values
+    # Check if log_gamma_temp contains -Inf values
     if (any(is.infinite(log_gamma_temp))) {
-      warning("EM algorithm reached -Inf with the provided number of iterations.\n")
+      warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
       break  # Break the loop if any matrix has -Inf values
     } else {
       log_gamma <- log_gamma_temp
@@ -27,9 +27,9 @@ run_em <- function(x, k, mu0 = NULL, n_iter = 1000) {
     log_pi_temp <- rowSums(log_gamma) - log(n)
     log_mu_temp <- rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))) - rowSums(log_gamma)
 
-    # Check if log_pi or log_mu contains -Inf values
+    # Check if log_pi_temp or log_mu_temp contains -Inf values
     if (any(is.infinite(log_pi_temp)) || any(is.infinite(log_mu_temp))) {
-      warning("EM algorithm reached -Inf with the provided number of iterations.\n")
+      warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
       break  # Break the loop if any matrix has -Inf values
     } else {
       log_pi <- log_pi_temp
@@ -37,7 +37,6 @@ run_em <- function(x, k, mu0 = NULL, n_iter = 1000) {
     }
   }
 
-  # Estimate z
   log_gamma <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
   z <- apply(log_gamma, 1, which.max)
 

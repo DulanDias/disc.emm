@@ -85,7 +85,7 @@ library("disc.emm")
 ```
 
 ```{r}
-fit <- emm.fit(y, n_init = 1)
+fit <- emm.fit(x, n_init = 1)
 fit
 ```
 
@@ -98,7 +98,6 @@ plot.pdf(x, fit)
 ```
 
 ```{r}
-x <- y
 k <- 10
 mu0 <- 10^runif(k, log10(min(x)), log10(max(x)))
 
@@ -148,6 +147,15 @@ matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)
 ```
 
 ```{r}
+joint_log_likelihood <- function(n, n_each_exp, pi, mu) {
+  temp <- 0
+  for (j in 1:length(n_each_exp)) {
+    if (n_each_exp[j] > 0) {
+      temp <- temp + n_each_exp[j] * (log(pi[j]) - log(mu[j]))
+    }
+  }
+  return(temp - n)
+}
 
 ```
 
@@ -164,7 +172,7 @@ for (i in 1:n_iter) {
 log_gamma_temp <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
 log_gamma_temp <- log_gamma_temp - matrix(rowSums(exp(log_gamma_temp)), nrow = length(rowSums(exp(log_gamma_temp))), ncol = ncol(log_gamma_temp))
 
-# Check if log_gamma contains -Inf values
+# Check if log_gamma_temp contains -Inf values
   if (any(is.infinite(log_gamma_temp))) {
     warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
     break  # Break the loop if any matrix has -Inf values
@@ -176,7 +184,7 @@ log_gamma_temp <- log_gamma_temp - matrix(rowSums(exp(log_gamma_temp)), nrow = l
 log_pi_temp <- rowSums(log_gamma) - log(n)
 log_mu_temp <- rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))) - rowSums(log_gamma)
 
-# Check if log_pi or log_mu contains -Inf values
+# Check if log_pi_temp or log_mu_temp contains -Inf values
   if (any(is.infinite(log_pi_temp)) || any(is.infinite(log_mu_temp))) {
     warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
     break  # Break the loop if any matrix has -Inf values
@@ -195,7 +203,7 @@ tabulate(z)
 
 ```{r}
   counts <- tabulate(z)
-  z <- match(z, cumsum(counts > 0) - 1)
+  z <- match(z, cumsum(counts > 0))
   n_each_exp <- counts[counts > 0]
   k_final <- length(n_each_exp)
 
@@ -209,29 +217,43 @@ tabulate(z)
   mu <- mu[mu_ascend, , drop = FALSE]
 
   joint_log_likelihood <- joint_log_likelihood(n, n_each_exp, pi, mu)
+  joint_log_likelihood
 ```
 
 ```{r}
-matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE)
-```
-```{r}
-tabulate(z)
+logsumexp <- function(x) {
+  a <- max(x)
+  a + log(sum(exp(x - a)))
+}
+
+marginal_log_likelihood <- function(x, pi, mu) {
+  log_gamma <- log(matrix(pi, nrow = n, ncol = length(pi), byrow = TRUE)) - log(matrix(mu, nrow = n, ncol = length(mu), byrow = TRUE)) - matrix(x, ncol = 1) %*% (1 / matrix(mu, nrow = 1, ncol = length(mu)))
+  
+  each_log_likelihood <- apply(log_gamma, 1, function(x) logsumexp(x))
+  return(sum(each_log_likelihood))
+}
+
+marginal_log_likelihood(x, pi, mu)
 ```
 
 ```{r}
-z
+dim(matrix(x, ncol = 1) %*% (1 / matrix(mu, nrow = 1, ncol = length(mu))))
 ```
 
 ```{r}
-log_gamma
+
 ```
 
 ```{r}
-cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))
+
 ```
 
 ```{r}
-rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))) - rowSums(log_gamma)
+
+```
+
+```{r}
+
 ```
 
 Loading a Dataset

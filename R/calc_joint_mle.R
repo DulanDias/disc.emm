@@ -3,7 +3,7 @@ calc_joint_mle <- function(x, z) {
   n <- length(x)
 
   counts <- tabulate(z)
-  z <- match(z, cumsum(counts > 0) - 1)
+  z <- match(z, cumsum(counts > 0))
   n_each_exp <- counts[counts > 0]
   k_final <- length(n_each_exp)
 

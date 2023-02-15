@@ -1,10 +1,9 @@
 joint_log_likelihood <- function(n, n_each_exp, pi, mu) {
-  k <- length(pi)
-  likelihood <- matrix(0, nrow = n, ncol = k)
-  for (i in 1:k) {
-    likelihood[, i] <- dexp(x, rate = 1/mu[i])
+  temp <- 0
+  for (j in 1:length(n_each_exp)) {
+    if (n_each_exp[j] > 0) {
+      temp <- temp + n_each_exp[j] * (log(pi[j]) - log(mu[j]))
+    }
   }
-  joint_likelihood <- likelihood %*% pi
-  joint_log_likelihood <- sum(log(joint_likelihood))
-  return(joint_log_likelihood)
+  return(temp - n)
 }

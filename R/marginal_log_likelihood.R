@@ -1,12 +1,6 @@
 marginal_log_likelihood <- function(x, pi, mu) {
-  k <- length(pi)
-  log_pi <- log(pi)
-  log_mu <- log(mu)
-  log_likelihood <- matrix(0, nrow = length(x), ncol = k)
-  for (i in 1:k) {
-    log_likelihood[, i] <- dexp(x, rate = exp(-log_mu[i]))
-  }
-  log_likelihood <- log_likelihood + log_pi
-  log_likelihood <- rowSums(log_likelihood)
-  return(sum(log_likelihood))
+  log_gamma <- log(matrix(pi, nrow = n, ncol = length(pi), byrow = TRUE)) - log(matrix(mu, nrow = n, ncol = length(mu), byrow = TRUE)) - matrix(x, ncol = 1) %*% (1 / matrix(mu, nrow = 1, ncol = length(mu)))
+
+  each_log_likelihood <- apply(log_gamma, 1, function(x) logsumexp(x))
+  return(sum(each_log_likelihood))
 }
