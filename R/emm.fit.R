@@ -63,17 +63,19 @@ emm.fit <- function(x, k = 10, n_init = 10, n_iter = 1000, seed = 1) {
   for (i in 1:n_init) {
     mu0 <- 10^runif(k, log10(min(x)), log10(max(x)))
     z <- run_em(x, k, n_iter = n_iter, mu0 = mu0)
+
     temp_results <- calc_joint_mle(x, z)
-    if (temp_results[["joint_log_likelihood"]] > max_log_likelihood) {
-      max_log_likelihood <- temp_results[["joint_log_likelihood"]]
-      marginal_log_likelihood <- temp_results[["marginal_log_likelihood"]]
-      pi <- temp_results[["pi"]]
-      mu <- temp_results[["mu"]]
-      z <- temp_results[["z"]]
-      n_each_exp <- temp_results[["n_each_exp"]]
-      k_final <- temp_results[["k_final"]]
-      joint_log_likelihood <- temp_results[["joint_log_likelihood"]]
+    if (temp_results$joint_log_likelihood > max_log_likelihood) {
+      max_log_likelihood <- temp_results$joint_log_likelihood
+      marginal_log_likelihood <- temp_results$marginal_log_likelihood
+      pi <- temp_results$pi
+      mu <- temp_results$mu
+      z <- temp_results$z
+      n_each_exp <- temp_results$n_each_exp
+      k_final <- temp_results$k_final
+      joint_log_likelihood <- temp_results$joint_log_likelihood
     }
+
   }
 
   ## evaluation metrics

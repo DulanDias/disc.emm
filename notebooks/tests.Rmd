@@ -9,6 +9,8 @@ date: "`r Sys.Date()`"
 ```{r setup, include=FALSE}
 library("devtools")
 library(roxygen2)
+library(dplyr)
+library(mixtools)
 ```
 
 ## Build
@@ -21,8 +23,8 @@ build()
 
 Set Working Directory
 ```{r message=FALSE, warning=FALSE}
-#setwd("C:/Users/40280170/OneDrive - Queen's University Belfast/Documents/R/disc-moed/disc-moed")
-#load_all(".");
+setwd("C:/Users/40280170/OneDrive - Queen's University Belfast/Documents/R/disc.emm")
+load_all(".");
 ```
 
 ```{r}
@@ -33,20 +35,236 @@ document()
 
 ```{r message=FALSE, warning=TRUE, include=FALSE}
 install("disc.emm")
+library("disc.emm")
+```
+
+```{r}
+detach("package:disc.emm", unload = TRUE)
+install.packages("C:/Users/40280170/OneDrive - Queen's University Belfast/Documents/R/disc.emm", 
+repos = NULL, 
+type = "source")
+library("disc.emm")
 ```
 
 ## Install via GitHub
 ```{r}
 library(devtools) # Make sure that the devtools library is loaded
 install_github("DulanDias/disc.emm")
+library("disc.emm")
 ```
 
 ## Testing the Package
+
+Generated Data
+```{r}
+## Generate data from a 2-component mixture of exponentials
+n <- 100 # sample size
+m <- 2 # nb components
+lambda <- c(1/3, 2/3)
+rate<-  c(1,1/10) # parameters
+set.seed(1234)
+x <- rexpmix(n, lambda, rate) # iid ~ exp mixture
+
+## histogram of the simulated data.
+hist(x, col=8)
+```
+```{r}
+x <- c(29.07203987, 1.301522241, 8.141782851, 20.19864893, 1.45620555, 9.95874878, 16.26790117, 14.25991477, 7.199322262, 26.91746199, 0.084437639, 1.934963489, 25.95335195, 0.174358194, 0.065103415, 0.913876996, 14.05761545, 13.85335156, 3.242489369, 1.954865674, 2.634856319, 3.48479622, 9.906912902, 9.405917668, 4.83200381, 0.131933635, 1.584532341, 2.393970592, 0.162654792, 2.037950917, 2.603456489, 7.520541119, 2.745965193, 7.435501358, 9.94260394, 0.51457807, 1.685430347, 4.176788135, 0.93129363, 0.773646365, 9.052343713, 9.321655018, 22.96774713, 0.153925968, 2.648848975, 9.335238412, 0.485138732, 2.778226272, 0.889098421, 0.643702357, 6.694053249, 4.654644411, 0.366230813, 9.631224665, 5.357109383, 0.52616985, 4.646037687, 0.923810143, 13.09840186, 2.021513924, 0.128270853, 5.161227924, 1.335625625, 4.427084715, 9.858844975, 2.777136661, 7.257337737, 10.3252612, 14.5469171, 9.268440005, 5.941058081, 0.133917791, 24.72533675, 1.599241894, 8.625544342, 18.63954218, 10.91230579, 3.686885115, 1.932475222, 0.748693075, 0.811318016, 21.2109345, 1.261626929, 7.425699094, 62.25731, 0.179033087, 0.401023296, 6.892694696, 36.51790309, 2.149245248, 34.8721618, 3.355345383, 4.952475722, 11.22097836, 5.179163921, 11.96972551, 5.989254178, 41.10072901, 0.127171003, 0.642457293)
+
+
+y <- c(29.07203987, 1.301522241, 8.141782851, 20.19864893, 1.45620555)
+
+```
+
+```{r message=FALSE, warning=TRUE, include=FALSE}
+detach("package:disc.emm", unload = TRUE)
+install.packages("C:/Users/40280170/OneDrive - Queen's University Belfast/Documents/R/disc.emm", 
+repos = NULL, 
+type = "source")
+library("disc.emm")
+```
+
+```{r}
+fit <- emm.fit(y, n_init = 1)
+fit
+```
+
+```{r}
+plot.cdf(x, fit)
+```
+
+```{r}
+plot.pdf(x, fit)
+```
+
+```{r}
+x <- y
+k <- 10
+mu0 <- 10^runif(k, log10(min(x)), log10(max(x)))
+
+n <- length(x)
+pi <- rep(1/k, k)
+mu <- mu0
+log_pi <- log(pi)
+log_mu <- log(mu)
+log_x <- matrix(log(x), nrow = length(x), ncol = 1)
+```
+
+```{r}
+log_x
+```
+
+```{r}
+log_pi
+```
+```{r}
+matrix(log_pi, nrow = length(x), ncol = length(log_pi), byrow = TRUE)
+```
+
+
+```{r}
+log_mu
+```
+
+
+```{r}
+matrix(log_mu, nrow = length(x), ncol = length(log_mu), byrow = TRUE)
+```
+```{r}
+matrix(x, ncol = 1)
+```
+
+
+```{r}
+matrix(exp(log_mu), nrow = 1, ncol = length(log_mu))
+```
+
+```{r}
+matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
+```
 
 ```{r}
 
 ```
 
+```{r}
 
+```
+
+```{r}
+pi <- rep(1/k, k)
+mu <- mu0
+log_pi <- log(pi)
+log_mu <- log(mu)
+log_x <- matrix(log(x), nrow = length(x), ncol = 1)
+n_iter <- 1000
+
+for (i in 1:n_iter) {
+# E step
+log_gamma_temp <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
+log_gamma_temp <- log_gamma_temp - matrix(rowSums(exp(log_gamma_temp)), nrow = length(rowSums(exp(log_gamma_temp))), ncol = ncol(log_gamma_temp))
+
+# Check if log_gamma contains -Inf values
+  if (any(is.infinite(log_gamma_temp))) {
+    warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
+    break  # Break the loop if any matrix has -Inf values
+  } else {
+    log_gamma <- log_gamma_temp
+  }
+
+# M step
+log_pi_temp <- rowSums(log_gamma) - log(n)
+log_mu_temp <- rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))) - rowSums(log_gamma)
+
+# Check if log_pi or log_mu contains -Inf values
+  if (any(is.infinite(log_pi_temp)) || any(is.infinite(log_mu_temp))) {
+    warning(paste("EM algorithm reached -Inf with the provided number of iterations. Completed ", i, " out of ", n_iter, " iterations only.\n"))
+    break  # Break the loop if any matrix has -Inf values
+  } else {
+    log_pi <- log_pi_temp
+    log_mu <- log_mu_temp
+  }
+}
+
+log_gamma <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
+z <- apply(log_gamma, 1, which.max)
+
+z
+tabulate(z)
+```
+
+```{r}
+  counts <- tabulate(z)
+  z <- match(z, cumsum(counts > 0) - 1)
+  n_each_exp <- counts[counts > 0]
+  k_final <- length(n_each_exp)
+
+  pi <- n_each_exp / n
+  mu <- t(sapply(split(x, z), mean))
+
+  mu_ascend <- order(mu)
+  z <- mu_ascend[z]
+  n_each_exp <- n_each_exp[mu_ascend]
+  pi <- pi[mu_ascend]
+  mu <- mu[mu_ascend, , drop = FALSE]
+
+  joint_log_likelihood <- joint_log_likelihood(n, n_each_exp, pi, mu)
+```
+
+```{r}
+matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE)
+```
+```{r}
+tabulate(z)
+```
+
+```{r}
+z
+```
+
+```{r}
+log_gamma
+```
+
+```{r}
+cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))
+```
+
+```{r}
+rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_gamma) - 1), nrow = nrow(log_x)))) - rowSums(log_gamma)
+```
+
+Loading a Dataset
+```{r}
+los <- read.csv(file = "data/los.csv")$x
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
 
 
