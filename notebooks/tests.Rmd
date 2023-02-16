@@ -85,7 +85,7 @@ library("disc.emm")
 ```
 
 ```{r}
-fit <- emm.fit(x, n_init = 1)
+fit <- emm.fit(y, n_init = 1)
 fit
 ```
 
@@ -98,6 +98,8 @@ plot.pdf(x, fit)
 ```
 
 ```{r}
+x <- y
+
 k <- 10
 mu0 <- 10^runif(k, log10(min(x)), log10(max(x)))
 
@@ -196,9 +198,26 @@ log_mu_temp <- rowSums(log_gamma + cbind(log_x, matrix(rep(log_x[, 1], ncol(log_
 
 log_gamma <- matrix(log_pi, nrow = n, ncol = length(log_pi), byrow = TRUE) - matrix(log_mu, nrow = n, ncol = length(log_mu), byrow = TRUE) - matrix(x, ncol = 1) %*% (1 / matrix(exp(log_mu), nrow = 1, ncol = length(log_mu)))
 z <- apply(log_gamma, 1, which.max)
+```
 
+```{r}
+log_gamma
+```
+
+```{r}
 z
-tabulate(z)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
 ```
 
 ```{r}

@@ -42,5 +42,8 @@ run_em <- function(x, k, mu0 = NULL, n_iter = 1000) {
 
   marginal_log_likelihood <- marginal_log_likelihood(x, exp(log_pi), exp(log_mu))
 
+
+  warning(paste("\n\n\n", marginal_log_likelihood, "\n\n\n"))
+
   return(list(z = z, marginal_log_likelihood = marginal_log_likelihood))
 }
