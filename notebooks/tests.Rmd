@@ -85,7 +85,7 @@ library("disc.emm")
 ```
 
 ```{r}
-fit <- emm.fit(y, n_init = 1)
+fit <- emm.fit(x, n_init = 10)
 fit
 ```
 
@@ -204,12 +204,13 @@ z <- apply(log_gamma, 1, which.max)
 log_gamma
 ```
 
+
 ```{r}
 z
 ```
 
 ```{r}
-
+pi
 ```
 
 ```{r}
@@ -217,8 +218,19 @@ z
 ```
 
 ```{r}
+counts <- tabulate(z)
+  z <- match(z, cumsum(counts > 0))
+  n_each_exp <- counts[counts > 0]
+  k_final <- length(n_each_exp)
 
+  pi <- n_each_exp / n
 ```
+
+```{r}
+pi <- n_each_exp / n
+pi
+```
+
 
 ```{r}
   counts <- tabulate(z)
@@ -260,19 +272,21 @@ dim(matrix(x, ncol = 1) %*% (1 / matrix(mu, nrow = 1, ncol = length(mu))))
 ```
 
 ```{r}
+log_gamma <- t(replicate(length(x), pi)) - t(replicate(length(x), mu)) - matrix(x, ncol = 1) %*%  (1 / matrix(mu, nrow = 1))
 
+log_gamma
 ```
 
 ```{r}
-
+dim(matrix(x, ncol = 1) %*%  (1 / matrix(mu, nrow = 1)))
 ```
 
 ```{r}
-
+dim(log(matrix(pi, nrow=1)))
 ```
 
 ```{r}
-
+cbind(rep(log(matrix(mu, nrow=1)), length(x)))
 ```
 
 Loading a Dataset
@@ -281,19 +295,24 @@ los <- read.csv(file = "data/los.csv")$x
 ```
 
 ```{r}
-
+A <- matrix(1:5, nrow = 1, ncol = 5)
+A
 ```
 
 ```{r}
-
+cbind(rep(A, 5))
 ```
 
 ```{r}
+p <- c(1, 2, 3, 4, 5)
 
+m <- t(replicate(5, p))
+
+print(m)
 ```
 
 ```{r}
-
+cbind(rep(log(matrix(pi, nrow=1)), length(x)))
 ```
 
 ```{r}
