@@ -2,10 +2,28 @@
 % Please edit documentation in R/bic.R
 \name{bic}
 \alias{bic}
-\title{Baysian information criterion for the estimated EMM.}
+\title{Calculates the Bayesian Information Criterion (BIC) for a model given its marginal log likelihood, number of parameters and sample size.}
 \usage{
 bic(marginal_log_likelihood, k, n)
 }
+\arguments{
+\item{marginal_log_likelihood}{The marginal log likelihood of the model.}
+
+\item{k}{The number of parameters in the model.}
+
+\item{n}{The sample size.}
+}
+\value{
+The value of the BIC.
+}
 \description{
-Baysian information criterion for the estimated EMM.
+The BIC is defined as -2 * marginal_log_likelihood + (2 * k - 1) * log(n) where k is the number of parameters and n is the sample size.
+}
+\examples{
+marginal_log_likelihood <- -10
+k <- 3
+n <- 100
+bic(marginal_log_likelihood, k, n)
+[1] 32.70554
+
 }

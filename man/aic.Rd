@@ -2,10 +2,24 @@
 % Please edit documentation in R/aic.R
 \name{aic}
 \alias{aic}
-\title{Akaike information criterion for the estimated EMM.}
+\title{Calculate Akaike Information Criterion (AIC)}
 \usage{
 aic(marginal_log_likelihood, k)
 }
+\arguments{
+\item{marginal_log_likelihood}{A scalar numeric value representing the marginal log-likelihood.}
+
+\item{k}{A scalar integer value representing the number of parameters in the model.}
+}
+\value{
+A scalar numeric value representing the AIC.
+}
 \description{
-Akaike information criterion for the estimated EMM.
+Calculates the Akaike Information Criterion (AIC) using the marginal log-likelihood and the number of parameters in the model.
+}
+\examples{
+marginal_log_likelihood <- -125.6
+k <- 3
+aic(marginal_log_likelihood, k)
+
 }
