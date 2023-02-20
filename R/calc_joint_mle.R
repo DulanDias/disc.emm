@@ -14,7 +14,7 @@ calc_joint_mle <- function(x, z) {
   z <- mu_ascend[z]
   n_each_exp <- n_each_exp[mu_ascend]
   pi <- pi[mu_ascend]
-  mu <- mu[mu_ascend, , drop = FALSE]
+  mu <- mu[mu_ascend]
 
   joint_log_likelihood <- joint_log_likelihood(n, n_each_exp, pi, mu)
 
