@@ -1,4 +1,4 @@
-find_intersections <- function(pu, mu, tolerance = 1e-10){
+find_intersections <- function(x, pu, mu, tolerance = 1e-10){
   intersections <- c()
   for(i in 1:(length(mu)-1)){
     for(j in (i+1):length(mu)){

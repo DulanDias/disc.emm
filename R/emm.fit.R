@@ -14,7 +14,7 @@ emm.fit <- function(x, k = 10, n_init = 10, n_iter = 1000, seed = 1) {
   set.seed(seed)
 
   # package names
-  packages <- c("matrixStats", "ggplot2", "gridExtra", "dplyr")
+  packages <- c("matrixStats", "ggplot2", "gridExtra", "dplyr", "gridExtra")
 
   # install packages not yet installed
   installed_packages <- packages %in% rownames(installed.packages())
